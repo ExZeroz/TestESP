@@ -384,8 +384,4 @@ local function UpdateESP()
     end
 end
 
-game:GetService("RunService"):UnbindFromRenderStep("ESPUpdate")
-
-game:GetService("RunService"):BindToRenderStep("ESPUpdate", 199, UpdateESP)
-
 return ESP
