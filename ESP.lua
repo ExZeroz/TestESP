@@ -1,4 +1,4 @@
-getgenv().Config = {
+local ESP = {
     Box = {
         Enable = true,
         Type = 'Full',
@@ -474,3 +474,5 @@ connections.main.RenderStepped = game:GetService("RunService").PostSimulation:Co
         end
     end
 end)
+
+return ESP
