@@ -465,10 +465,17 @@ game:GetService("Players").PlayerAdded:Connect(function(player)
     end
 end)
 
-game:GetService("Players").PlayerRemoving:Connect(function(player)
-    if player ~= game:GetService("Players").LocalPlayer then
-        utility.funcs.clear_esp(player)
+game:GetService("RunService").RenderStepped:Connect(function()
+    for _, player in ipairs(game:GetService("Players"):GetPlayers()) do
+        if player ~= game:GetService("Players").LocalPlayer then
+            utility.funcs.update(player)
+        end
     end
+end)
+
+game:GetService("Players").PlayerRemoving:Connect(function(player)
+    utility.funcs.clear_esp(player)
+    cache[player] = nil
 end)
 
 connections.main = connections.main or {}
