@@ -1,4 +1,4 @@
-getgenv().Config = {
+local ESP = {
     Box = {
         Enable = true,
         Type = 'Full',
@@ -136,7 +136,7 @@ Fonts['WindowsXP'] = Font.new(Overlay.NewFont('WindowsXP', 100, 'normal', { --//
 }))
 
 local Overlay
-Config = Config;
+ESP = ESP;
 Drawing = Drawing;
 
 local gui_inset = game:GetService("GuiService"):GetGuiInset()
@@ -152,7 +152,7 @@ utility.funcs.make_text = function(p)
     d.TextScaled = false
     d.TextSize = 10
     d.TextStrokeColor3 = Color3.fromRGB(0,0,0)
-    d.FontFace = Fonts[Config.Box.Font]
+    d.FontFace = Fonts[ESP.Box.Font]
     return d
 end
 
@@ -170,12 +170,12 @@ utility.funcs.render = LPH_NO_VIRTUALIZE(function(player)
         Filled = Instance.new('Frame', Instance.new('ScreenGui', game.CoreGui))
     }
 
-    if Config.Box.Filled.Gradient.Enable then
+    if ESP.Box.Filled.Gradient.Enable then
         local gradient = Instance.new("UIGradient")
         gradient.Name = "Gradient"
         gradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Config.Box.Filled.Gradient.Color.Start),
-            ColorSequenceKeypoint.new(1, Config.Box.Filled.Gradient.Color.End)
+            ColorSequenceKeypoint.new(0, ESP.Box.Filled.Gradient.Color.Start),
+            ColorSequenceKeypoint.new(1, ESP.Box.Filled.Gradient.Color.End)
         })
         gradient.Rotation = 90
         gradient.Parent = cache[player].Box.Full.Filled
@@ -213,9 +213,9 @@ utility.funcs.render = LPH_NO_VIRTUALIZE(function(player)
 
     local armorGradient = Instance.new("UIGradient", armorFill)
     armorGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Config.Bars.Armor.Color1),
-        ColorSequenceKeypoint.new(0.5, Config.Bars.Armor.Color2),
-        ColorSequenceKeypoint.new(1, Config.Bars.Armor.Color3)
+        ColorSequenceKeypoint.new(0, ESP.Bars.Armor.Color1),
+        ColorSequenceKeypoint.new(0.5, ESP.Bars.Armor.Color2),
+        ColorSequenceKeypoint.new(1, ESP.Bars.Armor.Color3)
     })
     armorGradient.Rotation = 90
 
@@ -245,9 +245,9 @@ utility.funcs.render = LPH_NO_VIRTUALIZE(function(player)
 
     local healthGradient = Instance.new("UIGradient", healthFill)
     healthGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Config.Bars.Health.Color1),
-        ColorSequenceKeypoint.new(0.5, Config.Bars.Health.Color2),
-        ColorSequenceKeypoint.new(1, Config.Bars.Health.Color3)
+        ColorSequenceKeypoint.new(0, ESP.Bars.Health.Color1),
+        ColorSequenceKeypoint.new(0.5, ESP.Bars.Health.Color2),
+        ColorSequenceKeypoint.new(1, ESP.Bars.Health.Color3)
     })
     healthGradient.Rotation = 90
 
@@ -318,20 +318,20 @@ utility.funcs.update = LPH_NO_VIRTUALIZE(function(player)
         return
     end
 
-    if Config.Box.Enable then
+    if ESP.Box.Enable then
         local fullBox = playerCache.Box.Full
         local square, outline, inline, filled = fullBox.Square, fullBox.Outline, fullBox.Inline, fullBox.Filled
 
-        if Config.Box.Type == "Full" then
-            square.Visible = Config.Box.Enable
+        if ESP.Box.Type == "Full" then
+            square.Visible = ESP.Box.Enable
             square.Position = position
             square.Size = size
-            square.Color = Config.Box.Color
+            square.Color = ESP.Box.Color
             square.Thickness = 2
             square.Filled = false
             square.ZIndex = 9e9
 
-            outline.Visible = Config.Box.Enable
+            outline.Visible = ESP.Box.Enable
             outline.Position = position - Vector2.new(1, 1)
             outline.Size = size + Vector2.new(2, 2)
             outline.Color = Color3.new(0, 0, 0)
@@ -345,16 +345,16 @@ utility.funcs.update = LPH_NO_VIRTUALIZE(function(player)
             inline.Thickness = 1
             inline.Filled = false
 
-            if Config.Box.Filled.Enable and filled then
+            if ESP.Box.Filled.Enable and filled then
                 filled.Position = UDim2.new(0, position.X, 0, position.Y - gui_inset.Y)
                 filled.Size = UDim2.new(0, size.X, 0, size.Y)
-                filled.BackgroundTransparency = Config.Box.Filled.Gradient.Transparency or 0.5
+                filled.BackgroundTransparency = ESP.Box.Filled.Gradient.Transparency or 0.5
                 filled.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                filled.Visible = Config.Box.Filled.Enable
+                filled.Visible = ESP.Box.Filled.Enable
                 filled.ZIndex = -9e9
 
                 local gradient = filled:FindFirstChild("Gradient")
-                if Config.Box.Filled.Gradient.Enable and gradient then
+                if ESP.Box.Filled.Gradient.Enable and gradient then
                     gradient.Rotation = math.sin(tick() * 2) * 180
                 end
             elseif filled then
@@ -378,7 +378,7 @@ utility.funcs.update = LPH_NO_VIRTUALIZE(function(player)
     local base_x = position.X
     local y = position.Y - gui_inset.Y
 
-    if Config.Bars.Health.Enable and humanoid then
+    if ESP.Bars.Health.Enable and humanoid then
         local targetHealth = math.clamp(humanoid.Health / humanoid.MaxHealth, 0, 1)
         local lastHealth = playerCache.Bars.Health.LastHealth or targetHealth
         local lerpedHealth = lastHealth + (targetHealth - lastHealth) * 0.05
@@ -400,7 +400,7 @@ utility.funcs.update = LPH_NO_VIRTUALIZE(function(player)
         end
     end
 
-    if Config.Text.Enable then
+    if ESP.Text.Enable then
         local nameLabel = playerCache.Text.Name
         local toolLabel = playerCache.Text.Tool
         local studsLabel = playerCache.Text.Studs
@@ -425,7 +425,7 @@ utility.funcs.update = LPH_NO_VIRTUALIZE(function(player)
         studsLabel.Text = string.format("[%.0fm]", meters)
     end
 
-    if Config.Bars.Armor.Enable and character then
+    if ESP.Bars.Armor.Enable and character then
         local bodyEffects = character:FindFirstChild("BodyEffects")
         local values = bodyEffects and bodyEffects:FindFirstChild("Armor")
         local targetArmor = values and math.clamp(values.Value / 130, 0, 1) or 0
@@ -480,4 +480,4 @@ connections.main.RenderStepped = game:GetService("RunService").PostSimulation:Co
     end
 end)
 
-return Config
+return ESP
